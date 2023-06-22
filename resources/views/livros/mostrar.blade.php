@@ -15,7 +15,6 @@
             <p>Autor: {{$livro->autor}}</p> <br> 
             <p>Ano: {{$livro->ano_publicacao}}</p> <br> <br> <br>
         @endforeach
-
     @else
         <p>não tem livros</p>
     @endif
