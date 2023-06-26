@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Livro;
+use App\Models\Genero;
 
 class LivroController extends Controller
 {
@@ -20,33 +21,42 @@ class LivroController extends Controller
      */
     public function create()
     {
-        //
+        $generos = Genero::all();
+        return view('livros.create', compact('generos'));
     }
     public function store(Request $request){
-    $livro = new Livro;
-    $livro->titulo = $request->input('titulo');
-    $livro->autor = $request->input('autor');
-    $livro->ano_publicacao = $request->input('ano');
-    $livro->save();
+        $request->validate([
+            'titulo' => 'required',
+            'autor' => 'required',
+            'ano' => 'required',
+            'capa' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'genero' => 'required|exists:generos,id',
+        ]);
 
-    return redirect('/');
-}
+        $livro = new Livro;
+        $livro->titulo = $request->input('titulo');
+        $livro->autor = $request->input('autor');
+        $livro->ano_publicacao = $request->input('ano');
 
-    /*
-     * Store a newly created resource in storage.
-     
-    public function store(Request $request)
-    {
-        //
-    }*/
+        // Armazena a capa do livro
+        if ($request->hasFile('capa') && $request->file('capa')->isValid()) {
+            $path = $request->file('capa')->store('livros');
+            $livro->capa = $path;
+        }
 
-    /**
+        // Define o gênero do livro
+        $generoId = $request->input('genero');
+        $genero = Genero::findOrFail($generoId);
+        $livro->genero()->associate($genero);
+
+        $livro->save();        
+    }
+
+    /** 
      * Display the specified resource.
      */
-    public function show()
-    {
+    public function show()    {
         $livros = Livro::all();
-
         return view('/livros/mostrar',['livros'=>$livros]);
     }
 
@@ -71,6 +81,6 @@ class LivroController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
     }
 }
