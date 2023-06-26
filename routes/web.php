@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/livros', [LivroController::class, 'index']);
+Route::get('/livros/create', [LivroController::class, 'create']);
 Route::post('/livros', [LivroController::class, 'store']);
 Route::get('/livros/mostrar', [LivroController::class, 'show']);
-Route::get('/livros/create', [LivroController::class, 'create']);
+

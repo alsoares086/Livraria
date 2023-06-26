@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Livro;
 use App\Models\Genero;
 
@@ -24,12 +25,14 @@ class LivroController extends Controller
         $generos = Genero::all();
         return view('livros.create', compact('generos'));
     }
-    public function store(Request $request){
+
+    public function store(Request $request){ 
+        
         $request->validate([
             'titulo' => 'required',
             'autor' => 'required',
             'ano' => 'required',
-            'capa' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'capa' => 'required|image|mimes:jpeg,png,jpg',
             'genero' => 'required|exists:generos,id',
         ]);
 
@@ -38,18 +41,38 @@ class LivroController extends Controller
         $livro->autor = $request->input('autor');
         $livro->ano_publicacao = $request->input('ano');
 
+        
+
         // Armazena a capa do livro
         if ($request->hasFile('capa') && $request->file('capa')->isValid()) {
             $path = $request->file('capa')->store('livros');
             $livro->capa = $path;
+            
+            $requestImg = $request->capa;
+            $extension = $requestImg->extension();
+            $imageName = md5($requestImg->getClientOriginalName() . strtotime(now())) . "." . $extension;
+            $requestImg->move(public_path('img/capas'), $imageName);
+        
+            $livro->capa = $imageName;
         }
+        
+        // Armazena a capa do livro
+        /*
+        if ($request->hasFile('capa') && $request->file('capa')->isValid()) {
+            $path = $request->file('capa')->store('livros');
+            $livro->capa = $path;
+        }*/
 
         // Define o gênero do livro
         $generoId = $request->input('genero');
         $genero = Genero::findOrFail($generoId);
         $livro->genero()->associate($genero);
 
-        $livro->save();        
+        $livro->save(); 
+
+        //return view('/livros/mostrar',['livros'=>$livros]);
+        return view('livros.index');
+    
     }
 
     /** 

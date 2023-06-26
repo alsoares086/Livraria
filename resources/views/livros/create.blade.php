@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
 </head>
 <body>
 <form action="/livros" method="POST" enctype="multipart/form-data">
+    @csrf
     <div class="form-group">
         <label for="titulo">Título:</label>
         <input type="text" name="titulo" id="titulo" class="form-control">
