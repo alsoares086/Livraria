@@ -11,6 +11,10 @@ Route::prefix('livros')->group(function () {
     Route::get('/mostrar', [LivroController::class, 'show'])->name('livros.show');
 });
 
+Route::get('/', function () {
+    return redirect('/livros');
+});
+
 ?>
 
 
