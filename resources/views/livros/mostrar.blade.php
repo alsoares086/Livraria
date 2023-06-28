@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,6 +10,7 @@
 </head>
 <body>
     <h1>Livros</h1>
+  
     @if(count($livros) > 0)
         @foreach($livros as $livro)
             <h3>Livro {{$loop->index + 1}}</h3>
