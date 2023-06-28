@@ -55,23 +55,19 @@ class LivroController extends Controller
         
             $livro->capa = $imageName;
         }
-        
-        // Armazena a capa do livro
-        /*
-        if ($request->hasFile('capa') && $request->file('capa')->isValid()) {
-            $path = $request->file('capa')->store('livros');
-            $livro->capa = $path;
-        }*/
 
         // Define o gênero do livro
         $generoId = $request->input('genero');
         $genero = Genero::findOrFail($generoId);
         $livro->genero()->associate($genero);
 
-        $livro->save(); 
+        $livro->save();
+         
+        //return view('livros.mostrar',['livros'=>$livro]);
+        //return view('livros.index');
 
-        //return view('/livros/mostrar',['livros'=>$livros]);
-        return view('livros.index');
+        $livros = Livro::all();
+        return view('livros.mostrar', compact('livros'));
     
     }
 
