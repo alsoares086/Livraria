@@ -84,7 +84,7 @@ class LivroController extends Controller
      */
     public function edit(string $id)
     {
-        //
+         //código para retornar o formulário com os dados do livro em uma view de edição
     }
 
     /**
@@ -92,7 +92,7 @@ class LivroController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //Código para atualizar os dados do livro
     }
 
     /**
@@ -100,6 +100,15 @@ class LivroController extends Controller
      */
     public function destroy(string $id)
     {
-        
+        $livro = Livro::findOrFail($id);
+
+        // Remove a capa do livro, se existir
+        if ($livro->capa) {
+            Storage::delete($livro->capa);
+        }
+    
+        $livro->delete();
+    
+        return redirect()->route('livros.mostrar');
     }
 }
