@@ -15,6 +15,5 @@ Route::get('/', function () {
     return redirect('/livros');
 });
 
-?>
 
 
